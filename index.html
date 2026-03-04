@@ -1,0 +1,574 @@
+<!DOCTYPE html>
+<html lang="kk">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Ұлықбек Есдаулет «Біз — түркілерміз» | Интерактивті платформа</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" rel="stylesheet">
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Montserrat:wght@300;400;600;700;800&family=Oswald:wght@500;700&display=swap');
+        
+        :root {
+            --accent-gold: #fbbf24;
+            --accent-sky: #0ea5e9;
+            --glass-bg: rgba(15, 23, 42, 0.75);
+        }
+
+        body {
+            font-family: 'Montserrat', sans-serif;
+            background-color: #020617;
+            background-image: linear-gradient(rgba(2, 6, 23, 0.85), rgba(2, 6, 23, 0.95)), 
+                              url('https://kerekinfo.kz/uploads/media/topic/2022/03/11/11/preview/0df06add33424363c272_900x600crop.jpg');
+            background-size: cover;
+            background-position: center;
+            background-attachment: fixed;
+            color: #f8fafc;
+            overflow-x: hidden;
+        }
+
+        /* Үлкен экрандар үшін оңтайландырылған Glass-panel */
+        .glass-panel {
+            background: var(--glass-bg);
+            backdrop-filter: blur(25px);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            border-radius: 2.5rem;
+            box-shadow: 0 30px 60px -15px rgba(0, 0, 0, 0.6);
+        }
+
+        .nav-btn {
+            background: rgba(255, 255, 255, 0.03);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+            position: relative;
+            overflow: hidden;
+        }
+
+        .nav-btn::after {
+            content: '';
+            position: absolute;
+            bottom: 0;
+            left: 50%;
+            width: 0;
+            height: 3px;
+            background: var(--accent-gold);
+            transition: all 0.3s;
+            transform: translateX(-50%);
+        }
+
+        .nav-btn.active {
+            background: linear-gradient(135deg, var(--accent-sky), #1d4ed8);
+            border-color: transparent;
+            transform: translateY(-3px);
+            box-shadow: 0 15px 30px rgba(14, 165, 233, 0.35);
+        }
+
+        .nav-btn.active::after { width: 50%; }
+
+        .title-glow {
+            font-family: 'Oswald', sans-serif;
+            text-shadow: 0 0 30px rgba(14, 165, 233, 0.5);
+            letter-spacing: 0.18em;
+        }
+
+        .poem-container {
+            line-height: 2.5;
+            font-size: 1.3rem;
+            font-style: italic;
+            background: linear-gradient(to right, rgba(14, 165, 233, 0.15), transparent);
+            border-left: 6px solid var(--accent-sky);
+            padding-left: 3rem;
+        }
+
+        .hidden-section { display: none; }
+        
+        .fade-in {
+            animation: fadeIn 0.7s ease-out forwards;
+        }
+
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(30px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        .custom-table th {
+            background: rgba(14, 165, 233, 0.25);
+            color: var(--accent-sky);
+            text-transform: uppercase;
+            font-size: 0.85rem;
+            letter-spacing: 0.12em;
+            padding: 1.5rem;
+        }
+
+        .custom-table td {
+            border-bottom: 1px solid rgba(255, 255, 255, 0.07);
+            padding: 1.5rem;
+        }
+
+        .pops-card {
+            background: rgba(255, 255, 255, 0.03);
+            border: 1px dashed rgba(255, 255, 255, 0.15);
+            transition: all 0.3s;
+        }
+
+        .pops-card:focus-within {
+            border-color: var(--accent-gold);
+            background: rgba(251, 191, 36, 0.05);
+            transform: scale(1.01);
+        }
+
+        .badge {
+            background: var(--accent-gold);
+            color: #020617;
+            padding: 4px 12px;
+            border-radius: 6px;
+            font-weight: 900;
+            font-size: 0.8rem;
+        }
+
+        select.analysis-select, select.compare-select {
+            background: rgba(15, 23, 42, 0.98);
+            color: #f1f5f9;
+            border: 1px solid rgba(255, 255, 255, 0.3);
+            border-radius: 0.75rem;
+            padding: 0.8rem;
+            width: 100%;
+            cursor: pointer;
+            outline: none;
+            font-size: 0.85rem;
+            transition: all 0.3s;
+        }
+
+        select.analysis-select:focus, select.compare-select:focus {
+            border-color: var(--accent-sky);
+            box-shadow: 0 0 10px rgba(14, 165, 233, 0.3);
+        }
+
+        /* Тексттің тым созылып кетпеуі үшін (Readability) */
+        .content-container {
+            max-width: 1400px;
+            margin: 0 auto;
+        }
+    </style>
+</head>
+<body class="min-h-screen">
+
+    <!-- Hero Section -->
+    <header class="relative py-24 px-4 overflow-hidden">
+        <div class="absolute inset-0 z-0 opacity-20 flex justify-center items-center">
+            <i class="fas fa-dharmachakra text-[35rem] animate-[spin_80s_linear_infinite]"></i>
+        </div>
+        <div class="relative z-10 text-center max-w-5xl mx-auto">
+            <span class="inline-block py-1.5 px-5 rounded-full bg-sky-500/10 text-sky-400 text-sm font-bold tracking-widest uppercase mb-6 border border-sky-500/20">
+                10-СЫНЫП | Қазақ Әдебиеті
+            </span>
+            <h1 class="text-6xl md:text-8xl font-black mb-6 title-glow uppercase bg-clip-text text-transparent bg-gradient-to-b from-white to-slate-400">
+                Біз — Түркілерміз!
+            </h1>
+            <p class="text-amber-400 text-3xl font-semibold italic opacity-80 mb-10">Ұлықбек Есдаулет</p>
+            <div class="flex justify-center gap-6 text-sm font-bold uppercase tracking-widest opacity-60">
+                <span>Тарихи құндылық</span>
+                <span class="text-sky-500 text-xl">•</span>
+                <span>Көркемдік бағалау</span>
+            </div>
+        </div>
+    </header>
+
+    <main class="content-container px-6 pb-24">
+        
+        <!-- Interactive Navigation (Large screens optimized) -->
+        <div class="glass-panel p-4 mb-16 sticky top-6 z-50">
+            <nav class="flex flex-wrap justify-center gap-3">
+                <button onclick="openTab('read')" id="btn-read" class="nav-btn active px-8 py-4 rounded-2xl font-bold text-sm uppercase flex items-center">
+                    <i class="fas fa-feather-pointed mr-3"></i>Өлең
+                </button>
+                <button onclick="openTab('analysis')" id="btn-analysis" class="nav-btn px-8 py-4 rounded-2xl font-bold text-sm uppercase flex items-center">
+                    <i class="fas fa-vial-circle-check mr-3"></i>Талдау
+                </button>
+                <button onclick="openTab('compare')" id="btn-compare" class="nav-btn px-8 py-4 rounded-2xl font-bold text-sm uppercase flex items-center">
+                    <i class="fas fa-scale-balanced mr-3"></i>Салыстыру
+                </button>
+                <button onclick="openTab('quiz')" id="btn-quiz" class="nav-btn px-8 py-4 rounded-2xl font-bold text-sm uppercase flex items-center">
+                    <i class="fas fa-brain mr-3"></i>Тест
+                </button>
+                <button onclick="openTab('pops')" id="btn-pops" class="nav-btn px-8 py-4 rounded-2xl font-bold text-sm uppercase flex items-center">
+                    <i class="fas fa-pen-nib mr-3"></i>ПОПС Эссе
+                </button>
+                <button onclick="openTab('reflect')" id="btn-reflect" class="nav-btn px-8 py-4 rounded-2xl font-bold text-sm uppercase flex items-center">
+                    <i class="fas fa-bullseye mr-3"></i>Нәтиже
+                </button>
+            </nav>
+        </div>
+
+        <!-- Section 1: Reading -->
+        <section id="tab-read" class="fade-in">
+            <div class="grid grid-cols-1 lg:grid-cols-6 gap-12 items-start">
+                <div class="lg:col-span-4 glass-panel p-12">
+                    <div class="flex items-center justify-between mb-10">
+                        <h3 class="text-sky-400 font-black uppercase tracking-widest text-base">Шығарма мәтіні</h3>
+                        <i class="fas fa-quote-right text-sky-500/20 text-5xl"></i>
+                    </div>
+                    <div class="poem-container whitespace-pre-wrap text-slate-100">
+Біз - түркілерміз...
+Көк аспандай жарқылдап, күркірерміз,
+Көк аспанның бұлтындай сілкінерміз,
+Көк бөріден туғанымыз рас болса,
+Көк тәңірден қуат ап, бір түлерміз.
+
+Кеудемізді билеген асқақ арман,
+Тарихымыз дастан боп таста қалған,
+Тірсегіміз тілінген кездерде де
+Жан жүректі жерім жоқ жасқа малған.
+
+...Біздің халық - бұ да бір қаймақ халық!
+                    </div>
+                </div>
+                <div class="lg:col-span-2 space-y-8">
+                    <div class="glass-panel p-10">
+                        <div class="badge mb-4">ОМ 10.2.2.1</div>
+                        <h4 class="text-amber-400 font-bold mb-5 uppercase text-sm tracking-widest">«Ойлан» әдісі</h4>
+                        <p class="text-base text-slate-400 mb-8 leading-relaxed italic">Автор неге «біз» деп айтады? Өлеңнен қандай көңіл күйді байқадыңыз?</p>
+                        <textarea placeholder="Алғашқы әсеріңізді осында қалдырыңыз..." class="w-full bg-slate-900/50 border border-white/5 rounded-3xl p-6 outline-none focus:border-amber-500 transition h-64 text-base text-white resize-none"></textarea>
+                        <button onclick="saveNote()" class="w-full mt-6 bg-amber-500/10 hover:bg-amber-500 text-amber-500 hover:text-slate-900 py-4 rounded-2xl font-bold transition duration-300 border border-amber-500/20 uppercase text-xs tracking-widest">Жауапты сақтау</button>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Section 2: Artistic Analysis -->
+        <section id="tab-analysis" class="hidden-section fade-in">
+            <div class="glass-panel p-12">
+                <div class="flex items-center gap-6 mb-12">
+                    <div class="p-4 bg-sky-500/10 rounded-2xl text-sky-400">
+                        <i class="fas fa-magnifying-glass-chart text-3xl"></i>
+                    </div>
+                    <div>
+                        <h3 class="font-black uppercase tracking-wider text-2xl">Көркемдік талдау тапсырмасы</h3>
+                        <p class="text-sm text-slate-500">Үзіндіге сәйкес келетін көркемдегіш құралды немесе деректі таңдаңыз</p>
+                    </div>
+                </div>
+                <div class="overflow-hidden rounded-3xl border border-white/5">
+                    <table class="w-full text-base custom-table">
+                        <thead>
+                            <tr>
+                                <th class="w-1/4">Таңдау</th>
+                                <th class="w-1/3">Өлеңнен үзінді</th>
+                                <th>Талдау және өмір шындығы</th>
+                            </tr>
+                        </thead>
+                        <tbody class="bg-white/2">
+                            <tr class="hover:bg-white/5 transition">
+                                <td>
+                                    <select id="analysis-q1" class="analysis-select">
+                                        <option value="">Таңдаңыз...</option>
+                                        <option value="дерек">Тарихи дерек</option>
+                                        <option value="теңеу">Теңеу</option>
+                                        <option value="метафора">Метафора</option>
+                                        <option value="эпитет">Эпитет</option>
+                                    </select>
+                                </td>
+                                <td class="italic text-sky-200 font-medium">«Көк бөріден туғанымыз рас болса»</td>
+                                <td class="text-slate-400 leading-relaxed">Түркі халықтарының көк бөріге табыну мифологиясымен байланысты. Тектілікті білдіреді.</td>
+                            </tr>
+                            <tr class="hover:bg-white/5 transition">
+                                <td>
+                                    <select id="analysis-q2" class="analysis-select">
+                                        <option value="">Таңдаңыз...</option>
+                                        <option value="дерек">Тарихи дерек</option>
+                                        <option value="теңеу">Теңеу</option>
+                                        <option value="метафора">Метафора</option>
+                                        <option value="эпитет">Эпитет</option>
+                                    </select>
+                                </td>
+                                <td class="italic text-sky-200 font-medium">«Көк аспандай жарқылдап, күркірерміз»</td>
+                                <td class="text-slate-400 leading-relaxed">Түркілердің күшін аспанмен теңеп, рух биіктігін көрсетеді. Бұл - тәуелсіздік нышаны.</td>
+                            </tr>
+                            <tr class="hover:bg-white/5 transition">
+                                <td>
+                                    <select id="analysis-q3" class="analysis-select">
+                                        <option value="">Таңдаңыз...</option>
+                                        <option value="дерек">Тарихи дерек</option>
+                                        <option value="теңеу">Теңеу</option>
+                                        <option value="метафора">Метафора</option>
+                                        <option value="эпитет">Эпитет</option>
+                                    </select>
+                                </td>
+                                <td class="italic text-sky-200 font-medium">«Тарихымыз дастан боп таста қалған»</td>
+                                <td class="text-slate-400 leading-relaxed">Көне руна жазулары мен өшпес тарихи мұраны, тастағы жазуларды меңзейді.</td>
+                            </tr>
+                            <tr class="hover:bg-white/5 transition">
+                                <td>
+                                    <select id="analysis-q4" class="analysis-select">
+                                        <option value="">Таңдаңыз...</option>
+                                        <option value="дерек">Тарихи дерек</option>
+                                        <option value="теңеу">Теңеу</option>
+                                        <option value="метафора">Метафора</option>
+                                        <option value="эпитет">Эпитет</option>
+                                    </select>
+                                </td>
+                                <td class="italic text-sky-200 font-medium">«Асқақ арман», «Қаймақ халық»</td>
+                                <td class="text-slate-400 leading-relaxed">Халықтың ерекше, таңдаулы және өршіл болмысын айқындайтын көркем тіркестер.</td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+                <div class="mt-12 flex flex-col items-center">
+                    <button onclick="validateAnalysis()" class="bg-sky-600 hover:bg-sky-500 text-white px-16 py-4 rounded-full font-bold transition shadow-xl uppercase text-sm tracking-widest">Талдауды тексеру</button>
+                    <div id="analysis-feedback" class="mt-6 font-bold text-lg hidden text-center"></div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Section 3: Comparison (Metric Finder Task) -->
+        <section id="tab-compare" class="hidden-section fade-in">
+            <div class="glass-panel p-12">
+                <div class="text-center mb-12">
+                    <h3 class="font-black uppercase tracking-widest text-3xl text-indigo-300">Салыстырмалы бағалау тапсырмасы</h3>
+                    <p class="text-sm text-slate-400 mt-3">Сипаттамаларға қарап, салыстыру өлшемдерін (сол жақ бағанда) таңдаңыз</p>
+                </div>
+                <div class="overflow-x-auto rounded-3xl border border-white/5">
+                    <table class="w-full text-sm custom-table">
+                        <thead>
+                            <tr class="bg-white/5">
+                                <th class="w-1/4">Өлшемді табыңыз</th>
+                                <th class="w-1/3 text-sky-400">Ұ. Есдаулет «Біз — түркілерміз»</th>
+                                <th class="w-1/3 text-amber-400">М. Жұмабаев «Мен жастарға сенемін»</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr>
+                                <td class="bg-white/2">
+                                    <select id="comp-label-1" class="compare-select font-black uppercase tracking-tighter">
+                                        <option value="">Өлшем...</option>
+                                        <option value="idea">Негізгі идея</option>
+                                        <option value="call">Авторлық үндеу</option>
+                                        <option value="hist">Тарихи құндылығы</option>
+                                    </select>
+                                </td>
+                                <td class="italic opacity-90 leading-relaxed">Түркілік бірегейлік, тарихи мұраға мақтаныш, ұлттық рухты асқақтату.</td>
+                                <td class="italic opacity-90 leading-relaxed">Ұлттық жастарға сенім арту, оларды білімге, өнерге, ел болашағына шақыру.</td>
+                            </tr>
+                            <tr>
+                                <td class="bg-white/2">
+                                    <select id="comp-label-2" class="compare-select font-black uppercase tracking-tighter">
+                                        <option value="">Өлшем...</option>
+                                        <option value="idea">Негізгі идея</option>
+                                        <option value="call">Авторлық үндеу</option>
+                                        <option value="hist">Тарихи құндылығы</option>
+                                    </select>
+                                </td>
+                                <td class="italic opacity-90 leading-relaxed">Бүкіл түркі жұртына, тектілік пен батырлықты ұмытпауға.</td>
+                                <td class="italic opacity-90 leading-relaxed">Қазақ жастарына, білімді болып, елді өркендетуге.</td>
+                            </tr>
+                            <tr>
+                                <td class="bg-white/2">
+                                    <select id="comp-label-3" class="compare-select font-black uppercase tracking-tighter">
+                                        <option value="">Өлшем...</option>
+                                        <option value="idea">Негізгі идея</option>
+                                        <option value="call">Авторлық үндеу</option>
+                                        <option value="hist">Тарихи құндылығы</option>
+                                    </select>
+                                </td>
+                                <td class="italic opacity-90 leading-relaxed">Түркі халықтарының ортақ тарихын, салт-дәстүрін, бабалар ерлігін насихаттайды.</td>
+                                <td class="italic opacity-90 leading-relaxed">ХХ ғ. басындағы ұлт-азаттық қозғалысының идеяларын, болашаққа деген үмітті бейнелейді.</td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+                <div class="mt-12 flex flex-col items-center">
+                    <button onclick="validateComparisonMetrics()" class="bg-indigo-600 hover:bg-indigo-500 text-white px-16 py-4 rounded-full font-bold transition shadow-xl uppercase text-sm tracking-widest">Өлшемдерді тексеру</button>
+                    <div id="compare-feedback" class="mt-6 font-bold text-lg hidden text-center"></div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Section 4: Quiz -->
+        <section id="tab-quiz" class="hidden-section fade-in">
+            <div class="max-w-4xl mx-auto space-y-8">
+                <div class="glass-panel p-10">
+                    <div class="flex items-center gap-6 mb-8">
+                        <span class="w-14 h-14 rounded-2xl bg-sky-500 flex items-center justify-center font-black text-2xl">1</span>
+                        <h4 class="text-2xl font-bold">Автор «Қаймақ халық» деп нені меңзейді?</h4>
+                    </div>
+                    <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+                        <button onclick="checkQuiz(1, true, this)" class="text-left p-6 rounded-3xl bg-white/5 border border-white/10 hover:border-sky-500 transition duration-300 font-bold text-base">А) Ең таңдаулы, асыл, текті халық</button>
+                        <button onclick="checkQuiz(1, false, this)" class="text-left p-6 rounded-3xl bg-white/5 border border-white/10 hover:border-red-500 transition duration-300 font-bold text-base">Ә) Ауқатты халық</button>
+                    </div>
+                </div>
+                <div class="glass-panel p-10">
+                    <div class="flex items-center gap-6 mb-8">
+                        <span class="w-14 h-14 rounded-2xl bg-sky-500 flex items-center justify-center font-black text-2xl">2</span>
+                        <h4 class="text-2xl font-bold">Түркілер «қуатты» қайдан алады?</h4>
+                    </div>
+                    <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+                        <button onclick="checkQuiz(2, true, this)" class="text-left p-6 rounded-3xl bg-white/5 border border-white/10 hover:border-sky-500 transition duration-300 font-bold text-base">А) Көк Тәңірден</button>
+                        <button onclick="checkQuiz(2, false, this)" class="text-left p-6 rounded-3xl bg-white/5 border border-white/10 hover:border-red-500 transition duration-300 font-bold text-base">Ә) Өзге елдерден</button>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Section 5: POPS -->
+        <section id="tab-pops" class="hidden-section fade-in">
+            <div class="glass-panel p-12">
+                <div class="text-center mb-12">
+                    <h3 class="text-3xl font-black uppercase text-amber-400 tracking-[0.25em] mb-4">ПОПС Формуласы</h3>
+                    <p class="text-base text-slate-500 italic max-w-3xl mx-auto">Өлеңнің қазіргі қазақ қоғамы үшін маңызы туралы шағын эссе құрастырыңыз</p>
+                </div>
+                <div class="grid grid-cols-1 md:grid-cols-2 gap-10">
+                    <div class="pops-card p-8 rounded-[2rem]">
+                        <div class="flex items-center gap-4 mb-4">
+                            <span class="text-3xl font-black text-sky-500">П</span>
+                            <span class="text-xs font-black uppercase tracking-widest text-slate-400">Позиция (Менің ойымша...)</span>
+                        </div>
+                        <textarea placeholder="Өз ойыңызды осында жазыңыз..." class="w-full bg-transparent p-0 outline-none text-base text-slate-200 resize-none h-32 leading-relaxed"></textarea>
+                    </div>
+                    <div class="pops-card p-8 rounded-[2rem]">
+                        <div class="flex items-center gap-4 mb-4">
+                            <span class="text-3xl font-black text-sky-500">О</span>
+                            <span class="text-xs font-black uppercase tracking-widest text-slate-400">Негіздеме (Себебі...)</span>
+                        </div>
+                        <textarea placeholder="Себебін түсіндіріңіз..." class="w-full bg-transparent p-0 outline-none text-base text-slate-200 resize-none h-32 leading-relaxed"></textarea>
+                    </div>
+                    <div class="pops-card p-8 rounded-[2rem]">
+                        <div class="flex items-center gap-4 mb-4">
+                            <span class="text-3xl font-black text-sky-500">П</span>
+                            <span class="text-xs font-black uppercase tracking-widest text-slate-400">Мысал (Мұны өлеңдегі...)</span>
+                        </div>
+                        <textarea placeholder="Өлеңнен мысал келтіріңіз..." class="w-full bg-transparent p-0 outline-none text-base text-slate-200 resize-none h-32 leading-relaxed"></textarea>
+                    </div>
+                    <div class="pops-card p-8 rounded-[2rem]">
+                        <div class="flex items-center gap-4 mb-4">
+                            <span class="text-3xl font-black text-sky-500">С</span>
+                            <span class="text-xs font-black uppercase tracking-widest text-slate-400">Салдар (Сондықтан...)</span>
+                        </div>
+                        <textarea placeholder="Түйінді қорытынды жасаңыз..." class="w-full bg-transparent p-0 outline-none text-base text-slate-200 resize-none h-32 leading-relaxed"></textarea>
+                    </div>
+                </div>
+                <div class="mt-16 flex justify-center">
+                    <button onclick="alert('Сақталды!')" class="bg-amber-500 hover:bg-amber-600 text-slate-900 px-16 py-5 rounded-full font-black uppercase tracking-widest text-sm transition shadow-2xl">Жұмысты тапсыру</button>
+                </div>
+            </div>
+        </section>
+
+        <!-- Section 6: Reflection -->
+        <section id="tab-reflect" class="hidden-section fade-in">
+            <div class="max-w-xl mx-auto glass-panel p-12 text-center">
+                <h3 class="font-black uppercase tracking-widest text-base mb-12 text-slate-300">«Бағдаршам» рефлексиясы</h3>
+                <div class="space-y-8">
+                    <button onclick="setReflect('green')" class="w-full flex items-center gap-8 p-8 rounded-[2rem] bg-green-500/10 border border-green-500/20 hover:bg-green-500/20 transition group">
+                        <div class="w-8 h-8 rounded-full bg-green-500 shadow-[0_0_20px_rgba(34,197,94,1)]"></div>
+                        <span class="font-bold text-green-400 text-lg uppercase tracking-wider text-left">Тақырыпты толық түсіндім</span>
+                    </button>
+                    <button onclick="setReflect('yellow')" class="w-full flex items-center gap-8 p-8 rounded-[2rem] bg-yellow-500/10 border border-yellow-500/20 hover:bg-yellow-500/20 transition">
+                        <div class="w-8 h-8 rounded-full bg-yellow-500 shadow-[0_0_20px_rgba(234,179,8,1)]"></div>
+                        <span class="font-bold text-yellow-400 text-lg uppercase tracking-wider text-left">Сұрақтарым бар</span>
+                    </button>
+                    <button onclick="setReflect('red')" class="w-full flex items-center gap-8 p-8 rounded-[2rem] bg-red-500/10 border border-red-500/20 hover:bg-red-500/20 transition">
+                        <div class="w-8 h-8 rounded-full bg-red-500 shadow-[0_0_20px_rgba(239,68,68,1)]"></div>
+                        <span class="font-bold text-red-400 text-lg uppercase tracking-wider text-left">Әлі де жұмыс керек</span>
+                    </button>
+                </div>
+                <div id="reflect-msg" class="mt-12 italic text-base text-sky-400 font-medium">Кері байланыс таңдаңыз...</div>
+            </div>
+        </section>
+
+    </main>
+
+    <footer class="py-24 text-center border-t border-white/5 bg-black/40">
+        <p class="text-sky-500 font-black text-sm tracking-[0.5em] uppercase opacity-40 mb-3">Бабалар аманаты — ұлттық рух</p>
+        <p class="text-xs text-slate-600 uppercase font-bold tracking-[0.2em]">&copy; 2024 Қазақ Әдебиеті | Интерактивті Сабақ</p>
+    </footer>
+
+    <script>
+        function openTab(id) {
+            document.querySelectorAll('section').forEach(s => s.classList.add('hidden-section'));
+            document.querySelectorAll('.nav-btn').forEach(b => b.classList.remove('active'));
+            document.getElementById('tab-' + id).classList.remove('hidden-section');
+            document.getElementById('btn-' + id).classList.add('active');
+            window.scrollTo({ top: 0, behavior: 'smooth' });
+        }
+
+        function checkQuiz(q, isCorrect, btn) {
+            const btns = btn.parentElement.querySelectorAll('button');
+            btns.forEach(b => {
+                b.style.borderColor = 'rgba(255, 255, 255, 0.1)';
+                b.style.background = 'rgba(255, 255, 255, 0.05)';
+            });
+
+            if (isCorrect) {
+                btn.style.borderColor = '#22c55e';
+                btn.style.background = 'rgba(34, 197, 94, 0.1)';
+            } else {
+                btn.style.borderColor = '#ef4444';
+                btn.style.background = 'rgba(239, 68, 68, 0.1)';
+            }
+        }
+
+        function validateAnalysis() {
+            const q1 = document.getElementById('analysis-q1').value;
+            const q2 = document.getElementById('analysis-q2').value;
+            const q3 = document.getElementById('analysis-q3').value;
+            const q4 = document.getElementById('analysis-q4').value;
+            const feedback = document.getElementById('analysis-feedback');
+            
+            feedback.classList.remove('hidden', 'text-green-400', 'text-red-400', 'text-amber-400');
+            
+            let correctCount = 0;
+            if (q1 === 'дерек') correctCount++;
+            if (q2 === 'теңеу') correctCount++;
+            if (q3 === 'метафора') correctCount++;
+            if (q4 === 'эпитет') correctCount++;
+
+            if (correctCount === 4) {
+                feedback.innerText = "КЕРЕМЕТ! Барлық көркемдегіш құралдарды дұрыс таптыңыз.";
+                feedback.classList.add('text-green-400');
+            } else if (correctCount > 0) {
+                feedback.innerText = `Нәтиже: ${correctCount}/4. Кейбір жауаптар қате, қайта тексеріп көріңіз.`;
+                feedback.classList.add('text-amber-400');
+            } else {
+                feedback.innerText = "Таңдауларды толтырып, тексеруді басыңыз.";
+                feedback.classList.add('text-red-400');
+            }
+            feedback.classList.remove('hidden');
+        }
+
+        function validateComparisonMetrics() {
+            const l1 = document.getElementById('comp-label-1').value;
+            const l2 = document.getElementById('comp-label-2').value;
+            const l3 = document.getElementById('comp-label-3').value;
+            const feedback = document.getElementById('compare-feedback');
+
+            feedback.classList.remove('hidden', 'text-green-400', 'text-red-400', 'text-amber-400');
+
+            let correct = 0;
+            if (l1 === 'idea') correct++;
+            if (l2 === 'call') correct++;
+            if (l3 === 'hist') correct++;
+
+            if (correct === 3) {
+                feedback.innerText = "ӨТЕ ЖАҚСЫ! Барлық салыстыру өлшемдерін дұрыс анықтадыңыз.";
+                feedback.classList.add('text-green-400');
+            } else if (correct > 0) {
+                feedback.innerText = `Нәтиже: ${correct}/3. Қайта тексеріп көріңіз.`;
+                feedback.classList.add('text-amber-400');
+            } else {
+                feedback.innerText = "Өлшемдерді таңдап, тексеруді басыңыз.";
+                feedback.classList.add('text-red-400');
+            }
+            feedback.classList.remove('hidden');
+        }
+
+        function setReflect(color) {
+            const msg = document.getElementById('reflect-msg');
+            if(color === 'green') msg.innerText = "Керемет! Сіз тарихи және көркемдік құндылықты толық бағалай алдыңыз.";
+            if(color === 'yellow') msg.innerText = "Қай бөлім түсініксіз болды? Салыстыру кестесін қайта қараңыз.";
+            if(color === 'red') msg.innerText = "Мұғаліммен кеңесіп, өлеңдегі символдарды тереңірек зерттеңіз.";
+        }
+
+        function saveNote() {
+            alert('Сәтті сақталды! Дескриптор: Шығарманың негізгі идеясын анықтадыңыз.');
+        }
+    </script>
+</body>
+</html>
